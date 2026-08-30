@@ -18,6 +18,8 @@ variable "ports" {
   type = list(object({
     internal = number
     external = optional(number)
+    # 公開する IP。省くと IPv4 全アドレス
+    ip = optional(string)
   }))
   default = []
 }

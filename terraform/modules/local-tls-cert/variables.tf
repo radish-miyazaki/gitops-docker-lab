@@ -8,6 +8,11 @@ variable "certs_volume_name" {
   type        = string
 }
 
+variable "certs_volume_id" {
+  description = "証明書と鍵を書く Docker volume の ID。作り直しの検出に使う"
+  type        = string
+}
+
 variable "install_ca" {
   description = "mkcert -install でローカル CA を OS の信頼ストアに登録するか。初回は管理者確認が出る"
   type        = bool

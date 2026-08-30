@@ -47,7 +47,7 @@ variable "traefik_image" {
 }
 
 variable "domain" {
-  description = "ラボのドメイン。各サービスは <name>.<domain> で公開する。.localhost は DNS なしで 127.0.0.1 に解決される"
+  description = "ラボのドメイン。各サービスは <name>.<domain> で公開する。.localhost は DNS なしで 127.0.0.1 と ::1 に解決される"
   type        = string
   default     = "gitops.localhost"
 }

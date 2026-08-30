@@ -14,7 +14,8 @@
 
 Traefik v3 をリバースプロキシとして置き、ホストに公開するポートは Traefik の 80 と 443 だけにする。
 ルーティングは Docker provider がコンテナのラベルから読む（`exposedByDefault: false` なので、ラベルを付けたコンテナだけが公開される）。
-ドメインは `gitops.localhost` を使う。`.localhost` は RFC 6761 の特別用途名でリゾルバがループバックに解決する決まりになっており、macOS でも `*.gitops.localhost` が 127.0.0.1 / ::1 に解決されることを実測した。
+ドメインは `gitops.localhost` を使う。`.localhost` は RFC 6761 の特別用途名でリゾルバがループバックに解決する決まりになっている。
+macOS でも `*.gitops.localhost` が 127.0.0.1 と ::1 の両方に解決されることを実測したので、Traefik の 80 / 443 は IPv4 と IPv6 の両方で公開する。
 証明書は mkcert のローカル CA で `*.gitops.localhost` と apex の 2 つを SAN に持つものを 1 枚発行し、Traefik の file provider に既定証明書として読ませる。
 証明書と鍵は Docker volume `lab-certs` にだけ置き、ホストの作業ディレクトリには残さない。
 
@@ -31,6 +32,7 @@ Traefik v3 をリバースプロキシとして置き、ホストに公開する
 ## 影響
 
 - ホストの公開ポートは 80 / 443 だけになり、`docker ps` で衝突の有無をひと目で確認できる。サービスを足すときはラベルを付けるだけでよい
+- 80 / 443 は `0.0.0.0` と `::` の両方に bind する。`.localhost` が ::1 にも解決される以上、Happy Eyeballs で IPv4 へ落ちないクライアントを取りこぼさないため
 - 初回の apply で `mkcert -install` が走り、管理者確認（macOS はキーチェーンのパスワード）が 1 度だけ出る。`install_local_ca = false` で飛ばせるが、その場合は証明書が信頼されない
 - 証明書と鍵は `lab-certs` volume にだけ存在する。`mise run destroy` で volume ごと消え、次の apply で作り直される
 - Forgejo の `ROOT_URL` が `https://forgejo.gitops.localhost/` になる。Webhook が届ける clone URL もこの形になるため、

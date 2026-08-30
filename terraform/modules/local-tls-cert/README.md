@@ -27,6 +27,7 @@ mkcert でローカル CA と `*.gitops.localhost` の証明書を作り、volum
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
+| certs\_volume\_id | 証明書と鍵を書く Docker volume の ID。作り直しの検出に使う | `string` | n/a | yes |
 | certs\_volume\_name | 証明書と鍵を書く Docker volume 名 | `string` | n/a | yes |
 | domain | 証明書を発行するドメイン。ワイルドカードと apex の両方を SAN に入れる | `string` | n/a | yes |
 | install\_ca | mkcert -install でローカル CA を OS の信頼ストアに登録するか。初回は管理者確認が出る | `bool` | `true` | no |

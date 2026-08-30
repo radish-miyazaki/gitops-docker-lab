@@ -73,6 +73,7 @@ module "local_tls_cert" {
 
   domain            = var.domain
   certs_volume_name = docker_volume.certs.name
+  certs_volume_id   = docker_volume.certs.id
   install_ca        = var.install_local_ca
 }
 
@@ -82,10 +83,14 @@ module "traefik" {
   name         = "traefik"
   image        = docker_image.traefik.image_id
   network_name = docker_network.lab.name
-  # ホストに出すポートはここだけ。他のサービスは Traefik 経由で名前で届く
+  # ホストに出すポートはここだけ。他のサービスは Traefik 経由で名前で届く。
+  # macOS は *.localhost を 127.0.0.1 と ::1 の両方に解決するため、
+  # IPv4 だけにフォールバックしないクライアントでも届くよう両方を公開する
   ports = [
     { internal = 80, external = 80 },
+    { internal = 80, external = 80, ip = "::" },
     { internal = 443, external = 443 },
+    { internal = 443, external = 443, ip = "::" },
   ]
   volumes = [
     { volume_name = docker_volume.certs.name, container_path = local.certs_mount_path, read_only = true },

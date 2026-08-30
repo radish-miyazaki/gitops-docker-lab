@@ -33,7 +33,7 @@
 | env | 環境変数。KEY=VALUE 形式。秘匿値は渡さない（tfstate に残るため） | `list(string)` | `[]` | no |
 | healthcheck | ヘルスチェック。null なら設定しない | <pre>object({<br/>    test         = list(string)<br/>    interval     = optional(string, "10s")<br/>    timeout      = optional(string, "5s")<br/>    retries      = optional(number, 5)<br/>    start_period = optional(string, "10s")<br/>  })</pre> | `null` | no |
 | labels | コンテナのラベル。Traefik のルーティング定義に使う | `map(string)` | `{}` | no |
-| ports | 公開ポート。external を省くとホストに公開しない | <pre>list(object({<br/>    internal = number<br/>    external = optional(number)<br/>  }))</pre> | `[]` | no |
+| ports | 公開ポート。external を省くとホストに公開しない | <pre>list(object({<br/>    internal = number<br/>    external = optional(number)<br/>    # 公開する IP。省くと IPv4 全アドレス<br/>    ip = optional(string)<br/>  }))</pre> | `[]` | no |
 | uploads | コンテナ内パス => ファイル内容。設定ファイルの注入に使う。秘匿値は渡さない | `map(string)` | `{}` | no |
 | user | 実行ユーザー。null ならイメージの既定 | `string` | `null` | no |
 | volumes | 名前付き volume のマウント | <pre>list(object({<br/>    volume_name    = string<br/>    container_path = string<br/>    read_only      = optional(bool, false)<br/>  }))</pre> | `[]` | no |

@@ -1,6 +1,7 @@
 resource "terraform_data" "this" {
-  # volume を作り直したら証明書も書き直す
-  triggers_replace = [var.certs_volume_name, var.domain]
+  # volume を作り直すと中身が空になるので証明書も発行し直す。
+  # 名前は destroy/apply で変わらないため、作り直しの検出には ID を使う
+  triggers_replace = [var.certs_volume_id, var.domain]
 
   provisioner "local-exec" {
     command     = "${path.module}/issue-cert.sh"

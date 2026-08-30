@@ -57,7 +57,7 @@ apply 後に `../forgejo` を apply する。順序は `mise run bootstrap` が�
 | certs\_volume\_name | 証明書を置く Docker volume 名 | `string` | `"lab-certs"` | no |
 | docker\_host | Docker デーモンの接続先。Docker Desktop の標準ソケットを既定にし、OrbStack などは DOCKER\_HOST で上書きする | `string` | `"unix:///var/run/docker.sock"` | no |
 | doco\_cd\_image | doco-cd のイメージ | `string` | `"ghcr.io/kimdre/doco-cd:0.113.0"` | no |
-| domain | ラボのドメイン。各サービスは <name>.<domain> で公開する。.localhost は DNS なしで 127.0.0.1 に解決される | `string` | `"gitops.localhost"` | no |
+| domain | ラボのドメイン。各サービスは <name>.<domain> で公開する。.localhost は DNS なしで 127.0.0.1 と ::1 に解決される | `string` | `"gitops.localhost"` | no |
 | forgejo\_admin\_username | Forgejo 管理者のユーザー名。Forgejo は admin を予約語として拒否するため既定値は別名にしてある | `string` | `"lab-admin"` | no |
 | forgejo\_image | Forgejo のイメージ | `string` | `"codeberg.org/forgejo/forgejo:16"` | no |
 | grafana\_image | Grafana のイメージ | `string` | `"grafana/grafana:12.1.1"` | no |
