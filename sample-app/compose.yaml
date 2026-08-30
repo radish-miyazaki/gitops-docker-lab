@@ -1,0 +1,8 @@
+services:
+  web:
+    image: nginx:1.27-alpine
+    ports:
+      - "8000:80"
+    volumes:
+      # doco-cd は clone 先を /data に持つので、相対パスのバインドマウントがそのまま使える
+      - ./html:/usr/share/nginx/html:ro

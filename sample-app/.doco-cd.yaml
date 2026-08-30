@@ -1,0 +1,3 @@
+name: sample-app
+reference: refs/heads/main
+webhook_filter: "^refs/heads/main$"
