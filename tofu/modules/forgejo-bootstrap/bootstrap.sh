@@ -19,7 +19,7 @@ err() {
 # @exitcode 1 足りないものがある
 check_env() {
   local name
-  for name in CONTAINER SECRETS_VOLUME ADMIN_USERNAME ADMIN_EMAIL ADMIN_PASSWORD \
+  for name in CONTAINER FORGEJO_PORT SECRETS_VOLUME ADMIN_USERNAME ADMIN_EMAIL ADMIN_PASSWORD \
       SERVICE_USERNAME SERVICE_EMAIL TOKEN_SCOPES WEBHOOK_SECRET GRAFANA_ADMIN_PASSWORD; do
     if [[ -z "${!name:-}" ]]; then
       err "環境変数 ${name} が未設定です"
@@ -35,7 +35,7 @@ check_env() {
 wait_for_forgejo() {
   local i
   for ((i = 0; i < HEALTH_TIMEOUT_SEC; i++)); do
-    if docker exec "${CONTAINER}" curl -sf http://localhost:3000/api/healthz >/dev/null 2>&1; then
+    if docker exec "${CONTAINER}" curl -sf "http://localhost:${FORGEJO_PORT}/api/healthz" >/dev/null 2>&1; then
       return 0
     fi
     sleep 1

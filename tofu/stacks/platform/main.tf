@@ -94,6 +94,9 @@ module "forgejo_bootstrap" {
   source = "../../modules/forgejo-bootstrap"
 
   container_name         = module.forgejo.container_name
+  forgejo_container_id   = module.forgejo.container_id
+  forgejo_data_volume_id = docker_volume.forgejo_data.id
+  forgejo_port           = local.forgejo_internal_port
   admin_username         = var.forgejo_admin_username
   secrets_volume_name    = docker_volume.secrets.name
   admin_password         = ephemeral.random_password.forgejo_admin.result

@@ -1,12 +1,14 @@
 resource "terraform_data" "bootstrap" {
-  # コンテナか volume を作り直したら Forgejo のデータも消えているので、やり直す
-  triggers_replace = [var.container_name, var.secrets_volume_name]
+  # コンテナか volume を作り直したら Forgejo のデータも消えているので、やり直す。
+  # 名前は destroy/apply で変わらないため、作り直しの検出には ID を使う
+  triggers_replace = [var.forgejo_container_id, var.forgejo_data_volume_id]
 
   provisioner "local-exec" {
     command     = "${path.module}/bootstrap.sh"
     interpreter = ["bash"]
     environment = {
       CONTAINER              = var.container_name
+      FORGEJO_PORT           = var.forgejo_port
       SECRETS_VOLUME         = var.secrets_volume_name
       ADMIN_USERNAME         = var.admin_username
       ADMIN_EMAIL            = var.admin_email

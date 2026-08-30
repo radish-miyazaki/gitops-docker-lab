@@ -3,9 +3,25 @@ variable "container_name" {
   type        = string
 }
 
+variable "forgejo_container_id" {
+  description = "Forgejo コンテナの ID。triggers_replace 用で、コンテナが作り直されたことの検出にだけ使う"
+  type        = string
+}
+
 variable "secrets_volume_name" {
   description = "秘匿値を書く Docker volume 名"
   type        = string
+}
+
+variable "forgejo_data_volume_id" {
+  description = "Forgejo のデータ volume の ID。triggers_replace 用で、volume が作り直されたことの検出にだけ使う"
+  type        = string
+}
+
+variable "forgejo_port" {
+  description = "Forgejo コンテナ内の HTTP ポート"
+  type        = number
+  default     = 3000
 }
 
 variable "admin_username" {
