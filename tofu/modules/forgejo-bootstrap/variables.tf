@@ -9,9 +9,9 @@ variable "secrets_volume_name" {
 }
 
 variable "admin_username" {
-  description = "Forgejo 管理者のユーザー名"
+  description = "Forgejo 管理者のユーザー名。Forgejo は admin を予約語として拒否するため既定値は別名にしてある"
   type        = string
-  default     = "admin"
+  default     = "lab-admin"
 }
 
 variable "admin_email" {

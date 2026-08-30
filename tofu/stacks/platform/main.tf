@@ -88,9 +88,8 @@ module "forgejo" {
 module "forgejo_bootstrap" {
   source = "../../modules/forgejo-bootstrap"
 
-  container_name = module.forgejo.container_name
-  # Forgejo は admin を予約語として弾くので、別の名前にする
-  admin_username         = "lab-admin"
+  container_name         = module.forgejo.container_name
+  admin_username         = var.forgejo_admin_username
   secrets_volume_name    = docker_volume.secrets.name
   admin_password         = ephemeral.random_password.forgejo_admin.result
   webhook_secret         = ephemeral.random_password.webhook_secret.result

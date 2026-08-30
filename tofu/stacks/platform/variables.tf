@@ -81,3 +81,9 @@ variable "poll_interval" {
   type        = string
   default     = "5m"
 }
+
+variable "forgejo_admin_username" {
+  description = "Forgejo 管理者のユーザー名。Forgejo は admin を予約語として拒否するため既定値は別名にしてある"
+  type        = string
+  default     = "lab-admin"
+}
