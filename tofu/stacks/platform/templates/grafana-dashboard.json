@@ -18,10 +18,10 @@
     {
       "id": 2,
       "type": "stat",
-      "title": "デプロイ失敗 (1h)",
+      "title": "ポーリング失敗 (1h)",
       "gridPos": { "x": 6, "y": 0, "w": 6, "h": 5 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [{ "refId": "A", "expr": "sum(increase(doco_cd_deployment_errors_total[1h]))" }],
+      "targets": [{ "refId": "A", "expr": "sum(increase(doco_cd_poll_errors_total[1h]))" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
       "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "red" } } }
     },
@@ -50,8 +50,7 @@
       "gridPos": { "x": 0, "y": 5, "w": 12, "h": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        { "refId": "A", "legendFormat": "{{deployment}}", "expr": "sum by (deployment) (increase(doco_cd_deployments_total[5m]))" },
-        { "refId": "B", "legendFormat": "失敗 {{deployment}}", "expr": "sum by (deployment) (increase(doco_cd_deployment_errors_total[5m]))" }
+        { "refId": "A", "legendFormat": "{{deployment}}", "expr": "sum by (deployment) (increase(doco_cd_deployments_total[5m]))" }
       ]
     },
     {

@@ -9,7 +9,8 @@ doco-cd に UI はない。push から反映までの流れを目で追えない
 
 ## 決定
 
-doco-cd の `/metrics`（`doco_cd_*`）を Prometheus で 15 秒ごとに scrape し、Grafana にダッシュボードを 1 枚 provisioning する。載せるのはデプロイ回数と失敗数、デプロイ所要時間、Webhook 受信数、ポーリング回数。
+doco-cd の `/metrics`（`doco_cd_*`）を Prometheus で 15 秒ごとに scrape し、Grafana にダッシュボードを 1 枚 provisioning する。載せるのはデプロイ回数、ポーリング失敗数、デプロイ所要時間、Webhook 受信数、ポーリング回数。
+doco-cd 0.113.0 にデプロイ失敗数のメトリクスは無いため、失敗の指標にはポーリング失敗数を使う。
 
 ## 検討した選択肢
 
