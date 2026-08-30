@@ -22,13 +22,13 @@ Docker Compose だけで GitOps を体験するための学習環境。Git に p
 
 ```text
 ホスト
-├─ mise: opentofu / tflint / terraform-docs / prek / ryl / rumdl / gitleaks
+├─ mise: opentofu / tflint / terraform-docs / prek / ryl / rumdl / gitleaks / shellcheck
 └─ Docker network: gitops-lab
    ├─ forgejo      :3000  Git サーバー
    ├─ doco-cd      :8080  Webhook 受信 / :9120 metrics
    ├─ prometheus   :9090
    ├─ grafana      :3001
-   ├─ sample-web   :8000  doco-cd がデプロイする nginx
+   ├─ sample-app-web-1  :8000  doco-cd がデプロイする nginx（compose service web）
    └─ volume lab-secrets  秘匿値の唯一の保存先
 ```
 
@@ -42,7 +42,7 @@ Docker Compose だけで GitOps を体験するための学習環境。Git に p
 
 ## 前提
 
-- Docker Desktop が動いていること
+- Docker が動いていること（Docker Desktop / OrbStack）
 - mise が入っていること
 
 ## 使い方
@@ -60,7 +60,7 @@ Forgejo へのログインはユーザー名 `lab-admin`、パスワードは `m
 ## 開発
 
 ```sh
-mise run lint   # fmt / validate / tflint / ryl / rumdl / gitleaks
+mise run lint   # fmt / validate / tflint / ryl / rumdl / gitleaks / shellcheck
 mise run docs   # terraform-docs で README を更新する
 ```
 
