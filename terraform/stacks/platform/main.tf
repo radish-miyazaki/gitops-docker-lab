@@ -22,6 +22,10 @@ resource "docker_volume" "secrets" {
   name = var.secrets_volume_name
 }
 
+resource "docker_volume" "certs" {
+  name = var.certs_volume_name
+}
+
 # destroy/apply を繰り返す学習環境で再 pull を避けるため、ローカルに残す
 resource "docker_image" "forgejo" {
   name         = var.forgejo_image
@@ -43,6 +47,11 @@ resource "docker_image" "grafana" {
   keep_locally = true
 }
 
+resource "docker_image" "traefik" {
+  name         = var.traefik_image
+  keep_locally = true
+}
+
 # 秘匿値は state に残さない。値は bootstrap の provisioner だけが受け取る（ADR 0009）
 ephemeral "random_password" "forgejo_admin" {
   length  = 24
@@ -59,22 +68,63 @@ ephemeral "random_password" "grafana_admin" {
   special = false
 }
 
+module "local_tls_cert" {
+  source = "../../modules/local-tls-cert"
+
+  domain            = var.domain
+  certs_volume_name = docker_volume.certs.name
+  install_ca        = var.install_local_ca
+}
+
+module "traefik" {
+  source = "../../modules/docker-service"
+
+  name         = "traefik"
+  image        = docker_image.traefik.image_id
+  network_name = docker_network.lab.name
+  # ホストに出すポートはここだけ。他のサービスは Traefik 経由で名前で届く
+  ports = [
+    { internal = 80, external = 80 },
+    { internal = 443, external = 443 },
+  ]
+  volumes = [
+    { volume_name = docker_volume.certs.name, container_path = local.certs_mount_path, read_only = true },
+  ]
+  binds = [
+    # Docker provider がコンテナのラベルを読むために要る
+    { host_path = "/var/run/docker.sock", container_path = "/var/run/docker.sock", read_only = true },
+  ]
+  uploads = {
+    "/etc/traefik/traefik.yml" = templatefile("${path.module}/templates/traefik.yml.tftpl", {
+      network = docker_network.lab.name
+    })
+    "/etc/traefik/dynamic/tls.yml" = templatefile("${path.module}/templates/traefik-tls.yml.tftpl", {
+      certs_mount_path = local.certs_mount_path
+      cert_file        = module.local_tls_cert.cert_file
+      key_file         = module.local_tls_cert.key_file
+    })
+  }
+
+  # 証明書が volume に書かれてから起動させる
+  depends_on = [module.local_tls_cert]
+}
+
 module "forgejo" {
   source = "../../modules/docker-service"
 
   name         = "forgejo"
   image        = docker_image.forgejo.image_id
   network_name = docker_network.lab.name
-  ports = [
-    { internal = local.forgejo_internal_port, external = var.forgejo_host_port },
-  ]
+  labels = merge(local.traefik_labels.forgejo, {
+    "traefik.http.services.forgejo.loadbalancer.server.port" = tostring(local.forgejo_internal_port)
+  })
   env = [
     "USER_UID=1000",
     "USER_GID=1000",
     # インストール画面を出さず、env の設定だけで起動させる
     "FORGEJO__security__INSTALL_LOCK=true",
     "FORGEJO__database__DB_TYPE=sqlite3",
-    "FORGEJO__server__DOMAIN=localhost",
+    "FORGEJO__server__DOMAIN=${local.hosts.forgejo}",
     "FORGEJO__server__HTTP_PORT=${local.forgejo_internal_port}",
     "FORGEJO__server__ROOT_URL=${local.forgejo_url_host}",
     "FORGEJO__service__DISABLE_REGISTRATION=true",
@@ -110,9 +160,9 @@ module "doco_cd" {
   name         = "doco-cd"
   image        = docker_image.doco_cd.image_id
   network_name = docker_network.lab.name
-  ports = [
-    { internal = local.doco_cd_http_port, external = var.doco_cd_host_port },
-  ]
+  labels = merge(local.traefik_labels.doco_cd, {
+    "traefik.http.services.doco_cd.loadbalancer.server.port" = tostring(local.doco_cd_http_port)
+  })
   env = [
     "TZ=Asia/Tokyo",
     "LOG_LEVEL=info",
@@ -152,9 +202,9 @@ module "prometheus" {
   name         = "prometheus"
   image        = docker_image.prometheus.image_id
   network_name = docker_network.lab.name
-  ports = [
-    { internal = local.prometheus_internal_port, external = var.prometheus_host_port },
-  ]
+  labels = merge(local.traefik_labels.prometheus, {
+    "traefik.http.services.prometheus.loadbalancer.server.port" = tostring(local.prometheus_internal_port)
+  })
   volumes = [
     { volume_name = docker_volume.prometheus_data.name, container_path = "/prometheus" },
   ]
@@ -171,9 +221,9 @@ module "grafana" {
   name         = "grafana"
   image        = docker_image.grafana.image_id
   network_name = docker_network.lab.name
-  ports = [
-    { internal = local.grafana_internal_port, external = var.grafana_host_port },
-  ]
+  labels = merge(local.traefik_labels.grafana, {
+    "traefik.http.services.grafana.loadbalancer.server.port" = tostring(local.grafana_internal_port)
+  })
   env = [
     "GF_SECURITY_ADMIN_USER=admin",
     "GF_SECURITY_ADMIN_PASSWORD__FILE=${local.secrets_mount_path}/grafana_admin_password",
@@ -181,6 +231,8 @@ module "grafana" {
     "GF_AUTH_ANONYMOUS_ENABLED=true",
     "GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer",
     "GF_USERS_ALLOW_SIGN_UP=false",
+    # リダイレクト先やダッシュボード共有 URL を Traefik 経由の名前にする
+    "GF_SERVER_ROOT_URL=${local.urls.grafana}",
   ]
   volumes = [
     { volume_name = docker_volume.grafana_data.name, container_path = "/var/lib/grafana" },

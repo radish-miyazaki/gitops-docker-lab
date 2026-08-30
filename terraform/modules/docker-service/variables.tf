@@ -77,3 +77,9 @@ variable "wait_for_healthy" {
   type        = bool
   default     = false
 }
+
+variable "labels" {
+  description = "コンテナのラベル。Traefik のルーティング定義に使う"
+  type        = map(string)
+  default     = {}
+}

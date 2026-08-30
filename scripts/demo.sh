@@ -15,13 +15,13 @@ main() {
 
   cat <<USAGE
 1. clone する（ユーザー名は ${admin_user}、パスワードは mise run creds の forgejo_admin_password）
-   git clone http://localhost:3000/gitops-lab/sample-app.git /tmp/sample-app && cd /tmp/sample-app
+   git clone https://forgejo.gitops.localhost/gitops-lab/sample-app.git /tmp/sample-app && cd /tmp/sample-app
 2. html/index.html の "v1" を "v2" に変えて push する
    git commit -am "feat: v2" && git push
 3. 数秒後に反映を確認する
-   curl -s http://localhost:8000 | grep -o 'sample-app v[0-9]*'
+   curl -s https://app.gitops.localhost | grep -o 'sample-app v[0-9]*'
 4. Grafana でデプロイ回数が増えたことを見る
-   open http://localhost:3001/d/doco-cd
+   open https://grafana.gitops.localhost/d/doco-cd
 5. Webhook を止めてポーリングだけで反映されることも試す
    Forgejo の Settings > Webhooks で無効化し、v3 を push。5 分以内に反映される
 USAGE

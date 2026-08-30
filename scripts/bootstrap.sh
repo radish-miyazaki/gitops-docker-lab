@@ -21,8 +21,18 @@ apply_stack() {
   )
 }
 
+# @description tofu output -json urls の結果から 1 件取り出す。jq を増やしたくないので sed で拾う。
+# @arg $1 string urls の JSON
+# @arg $2 string キー（forgejo など）
+# @stdout URL
+url_from() {
+  local json="$1"
+  local key="$2"
+  sed -n "s/.*\"${key}\": *\"\([^\"]*\)\".*/\\1/p" <<< "${json}"
+}
+
 main() {
-  local admin_user
+  local admin_user urls
 
   apply_stack platform
   export_forgejo_env
@@ -30,11 +40,14 @@ main() {
   "${ROOT}/scripts/seed-sample-app.sh"
 
   admin_user="$(cd "${ROOT}/terraform/stacks/platform" && tofu output -raw forgejo_admin_username)"
+  urls="$(cd "${ROOT}/terraform/stacks/platform" && tofu output -json urls)"
 
   echo
-  echo "Forgejo:  http://localhost:3000  (${admin_user} / mise run creds)"
-  echo "Grafana:  http://localhost:3001"
-  echo "sample:   http://localhost:8000"
+  echo "Forgejo:    $(url_from "${urls}" forgejo)  (${admin_user} / mise run creds)"
+  echo "Grafana:    $(url_from "${urls}" grafana)"
+  echo "Prometheus: $(url_from "${urls}" prometheus)"
+  echo "doco-cd:    $(url_from "${urls}" doco_cd)"
+  echo "sample:     $(url_from "${urls}" app)"
 }
 
 main "$@"

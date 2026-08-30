@@ -14,3 +14,4 @@
 | [0008](0008-doco-cd-service-user.md) | doco-cd の Git 認証は専用ユーザーのトークンで行う | 採用 | 2026-08-30 |
 | [0009](0009-secrets-via-ephemeral-and-volume.md) | 秘匿値は ephemeral と Docker volume で受け渡す | 採用 | 2026-08-30 |
 | [0010](0010-opentofu.md) | IaC ツールに OpenTofu を使う | 採用 | 2026-08-30 |
+| [0011](0011-traefik-https.md) | Traefik でローカル HTTPS と名前によるルーティングを行う | 採用 | 2026-08-30 |

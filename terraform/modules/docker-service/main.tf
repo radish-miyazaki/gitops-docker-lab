@@ -40,6 +40,14 @@ resource "docker_container" "this" {
     }
   }
 
+  dynamic "labels" {
+    for_each = var.labels
+    content {
+      label = labels.key
+      value = labels.value
+    }
+  }
+
   dynamic "upload" {
     for_each = var.uploads
     content {

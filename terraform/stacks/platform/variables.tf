@@ -40,28 +40,28 @@ variable "grafana_image" {
   default     = "grafana/grafana:12.1.1"
 }
 
-variable "forgejo_host_port" {
-  description = "ホスト側で Forgejo を公開するポート"
-  type        = number
-  default     = 3000
+variable "traefik_image" {
+  description = "Traefik のイメージ"
+  type        = string
+  default     = "traefik:v3.6"
 }
 
-variable "doco_cd_host_port" {
-  description = "ホスト側で doco-cd の Webhook を公開するポート"
-  type        = number
-  default     = 8080
+variable "domain" {
+  description = "ラボのドメイン。各サービスは <name>.<domain> で公開する。.localhost は DNS なしで 127.0.0.1 に解決される"
+  type        = string
+  default     = "gitops.localhost"
 }
 
-variable "prometheus_host_port" {
-  description = "ホスト側で Prometheus を公開するポート"
-  type        = number
-  default     = 9090
+variable "certs_volume_name" {
+  description = "証明書を置く Docker volume 名"
+  type        = string
+  default     = "lab-certs"
 }
 
-variable "grafana_host_port" {
-  description = "ホスト側で Grafana を公開するポート"
-  type        = number
-  default     = 3001
+variable "install_local_ca" {
+  description = "mkcert のローカル CA を OS の信頼ストアに登録するか"
+  type        = bool
+  default     = true
 }
 
 variable "org_name" {

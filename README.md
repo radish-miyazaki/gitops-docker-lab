@@ -4,10 +4,11 @@ Docker Compose だけで GitOps を体験するための学習環境。Git に p
 
 ## 構成
 
-- Forgejo: Git サーバー (<http://localhost:3000>)
-- doco-cd: GitOps ツール。Webhook とポーリングで変更を拾い `docker compose up` する
-- Prometheus / Grafana: doco-cd のメトリクスを可視化 (<http://localhost:3001>)
-- sample-app: デプロイ対象の nginx (<http://localhost:8000>)
+- Traefik: リバースプロキシ。ホストに出すポートは 80 / 443 だけで、各サービスには名前で届く
+- Forgejo: Git サーバー (<https://forgejo.gitops.localhost>)
+- doco-cd: GitOps ツール。Webhook とポーリングで変更を拾い `docker compose up` する (<https://doco-cd.gitops.localhost>)
+- Prometheus / Grafana: doco-cd のメトリクスを可視化 (<https://prometheus.gitops.localhost> / <https://grafana.gitops.localhost>)
+- sample-app: デプロイ対象の nginx (<https://app.gitops.localhost>)
 
 すべて OpenTofu で作る。ツールは mise で入れる。
 
@@ -22,14 +23,16 @@ Docker Compose だけで GitOps を体験するための学習環境。Git に p
 
 ```text
 ホスト
-├─ mise: opentofu / tflint / terraform-docs / prek / ryl / rumdl / gitleaks / shellcheck
+├─ mise: opentofu / tflint / terraform-docs / prek / ryl / rumdl / gitleaks / shellcheck / mkcert
 └─ Docker network: gitops-lab
-   ├─ forgejo      :3000  Git サーバー
-   ├─ doco-cd      :8080  Webhook 受信 / :9120 metrics
-   ├─ prometheus   :9090
-   ├─ grafana      :3001
-   ├─ sample-app-web-1  :8000  doco-cd がデプロイする nginx（compose service web）
-   └─ volume lab-secrets  秘匿値の唯一の保存先
+   ├─ traefik      ホスト :80 / :443 のみ公開。ラベルを見て下の各サービスに振り分ける
+   │  ├─ forgejo.gitops.localhost      Git サーバー
+   │  ├─ doco-cd.gitops.localhost      Webhook 受信 / :9120 metrics（metrics は内部のみ）
+   │  ├─ prometheus.gitops.localhost
+   │  ├─ grafana.gitops.localhost
+   │  └─ app.gitops.localhost          doco-cd がデプロイする nginx（compose service web）
+   ├─ volume lab-secrets  秘匿値の唯一の保存先
+   └─ volume lab-certs    mkcert が発行した証明書と鍵の唯一の保存先
 ```
 
 ## OpenTofu の構成
@@ -55,7 +58,9 @@ mise run demo        # 変更を push して反映を見る手順を表示する
 mise run destroy     # すべて消す
 ```
 
-Forgejo へのログインはユーザー名 `lab-admin`、パスワードは `mise run creds` で表示する。
+Forgejo へのログインはユーザー名 `lab-admin`、パスワードは `mise run creds` で表示する。URL は `mise run bootstrap` の最後に表示する。
+
+初回の `mise run bootstrap` では mkcert がローカル CA を OS の信頼ストアに登録するため、管理者確認が 1 度だけ出る（[ADR 0011](docs/adr/0011-traefik-https.md)）。
 
 ## 開発
 
@@ -76,6 +81,8 @@ mise run docs   # terraform-docs で README を更新する
 - Forgejo の `webhook.ALLOWED_HOST_LIST=private` はローカル前提の緩い設定
 - Forgejo は管理者ユーザー名に `admin` を使えない（予約語として拒否する）ため、`lab-admin` を使う
 - `DOCKER_HOST` は `scripts/lib.sh` が docker context から補う。OrbStack でも Docker Desktop でも動く
+- ホストの 80 / 443 を Traefik が使う。他のサーバーが掴んでいると `mise run bootstrap` が失敗する
+- 証明書は mkcert のローカル CA で署名しているので、この Mac 以外からは信頼されない
 
 ## ドキュメント
 

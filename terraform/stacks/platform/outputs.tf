@@ -37,3 +37,13 @@ output "sample_app_repo_name" {
   description = "デプロイ対象リポ名"
   value       = var.sample_app_repo_name
 }
+
+output "domain" {
+  description = "ラボのドメイン"
+  value       = var.domain
+}
+
+output "urls" {
+  description = "各サービスの URL"
+  value       = local.urls
+}
