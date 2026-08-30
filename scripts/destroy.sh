@@ -22,12 +22,33 @@ destroy_stack() {
   )
 }
 
+# @description forgejo の destroy に要る情報が揃っているか確認する。
+#   platform の state か lab-secrets volume が先に消えていると
+#   export_forgejo_env が読む forgejo_admin_username / forgejo_admin_password が取れない。
+# @exitcode 0 揃っている
+# @exitcode 1 欠けている
+can_destroy_forgejo() {
+  [[ -f "${ROOT}/tofu/stacks/platform/terraform.tfstate" ]] || return 1
+  (cd "${ROOT}/tofu/stacks/platform" && tofu output -raw forgejo_admin_username) >/dev/null 2>&1 \
+    && read_secret forgejo_admin_password >/dev/null 2>&1
+}
+
 main() {
   if [[ -f "${ROOT}/tofu/stacks/forgejo/terraform.tfstate" ]]; then
-    export_forgejo_env
-    destroy_stack forgejo
+    if can_destroy_forgejo; then
+      export_forgejo_env
+      destroy_stack forgejo
+    else
+      err "tofu/stacks/platform の state か lab-secrets volume が無く、forgejo 認証情報が読めません。forgejo の state が孤立しているので destroy をスキップします。tofu/stacks/forgejo で手動確認してください"
+    fi
   fi
-  docker compose -p sample-app down --remove-orphans 2>/dev/null || true
+
+  # 存在しない project を down してもエラーにはならないが、
+  # 動いているコンテナが無ければ down 自体を呼ばない
+  if [[ -n "$(docker compose -p sample-app ps -q)" ]]; then
+    docker compose -p sample-app down --remove-orphans
+  fi
+
   destroy_stack platform
 }
 
