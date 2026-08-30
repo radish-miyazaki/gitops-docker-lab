@@ -22,20 +22,25 @@ resource "docker_volume" "secrets" {
   name = var.secrets_volume_name
 }
 
+# destroy/apply を繰り返す学習環境で再 pull を避けるため、ローカルに残す
 resource "docker_image" "forgejo" {
-  name = var.forgejo_image
+  name         = var.forgejo_image
+  keep_locally = true
 }
 
 resource "docker_image" "doco_cd" {
-  name = var.doco_cd_image
+  name         = var.doco_cd_image
+  keep_locally = true
 }
 
 resource "docker_image" "prometheus" {
-  name = var.prometheus_image
+  name         = var.prometheus_image
+  keep_locally = true
 }
 
 resource "docker_image" "grafana" {
-  name = var.grafana_image
+  name         = var.grafana_image
+  keep_locally = true
 }
 
 # 秘匿値は state に残さない。値は bootstrap の provisioner だけが受け取る（ADR 0009）
