@@ -194,5 +194,6 @@ module "grafana" {
     "/etc/grafana/dashboards/doco-cd.json" = file("${path.module}/templates/grafana-dashboard.json")
   }
 
+  # grafana_admin_password が volume に書かれてから起動させる
   depends_on = [module.forgejo_bootstrap]
 }
