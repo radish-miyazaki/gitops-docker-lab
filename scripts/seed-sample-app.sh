@@ -27,10 +27,24 @@ EOF
   chmod +x "${path}"
 }
 
+# @description リモートに main ブランチがすでにあるか調べる。
+#   bootstrap を seed 済み環境に再実行したときに、fresh な root commit を push して
+#   non-fast-forward で失敗するのを避けるための事前チェック。
+# @arg $1 string リモート URL
+# @arg $2 string askpass スクリプトのパス
+# @exitcode 0 main ブランチがある
+# @exitcode 1 まだ無い
+remote_has_main() {
+  local remote="$1"
+  local askpass="$2"
+  GIT_ASKPASS="${askpass}" GIT_TERMINAL_PROMPT=0 \
+    git ls-remote --exit-code --heads "${remote}" main >/dev/null 2>&1
+}
+
 # @description git push をリトライ付きで実行する。
-#   組織/リポジトリ作成直後は API 認証（tofu の forgejo provider）は通っても
-#   git smart HTTP の basic 認証が数秒遅れて有効になることがあるため、
-#   一度失敗しても間を置いて再試行する。
+#   push が失敗する理由の切り分けはしておらず、どんな失敗でも同じだけ間を置いて再試行する。
+#   動機になったのは、組織/リポジトリ作成直後は API 認証（tofu の forgejo provider）は
+#   通っても git smart HTTP の basic 認証が数秒遅れて有効になることがある、という事例。
 # @arg $1 string リモート URL
 # @arg $2 string askpass スクリプトのパス
 push_with_retry() {
@@ -58,6 +72,11 @@ main() {
   # shellcheck disable=SC2064
   trap "rm -rf '${work}'" EXIT
   write_askpass "${work}/askpass.sh" "${admin_user}"
+
+  if remote_has_main "${clone_url}" "${work}/askpass.sh"; then
+    echo "すでに push 済みです: ${clone_url}"
+    return 0
+  fi
 
   cp -R "${ROOT}/sample-app/." "${work}/repo"
   cd "${work}/repo"
