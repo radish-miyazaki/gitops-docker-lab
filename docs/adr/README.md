@@ -15,3 +15,4 @@
 | [0009](0009-secrets-via-ephemeral-and-volume.md) | 秘匿値は ephemeral と Docker volume で受け渡す | 採用 | 2026-08-30 |
 | [0010](0010-opentofu.md) | IaC ツールに OpenTofu を使う | 採用 | 2026-08-30 |
 | [0011](0011-traefik-https.md) | Traefik でローカル HTTPS と名前によるルーティングを行う | 採用 | 2026-08-30 |
+| [0012](0012-ci-github-actions.md) | GitHub Actions で lint を回す | 採用 | 2026-08-30 |

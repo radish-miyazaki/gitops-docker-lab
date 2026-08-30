@@ -71,6 +71,8 @@ mise run docs   # terraform-docs で README を更新する
 
 コミットは Conventional Commits。prek が commit-msg で検査する。
 
+push と PR のたびに GitHub Actions が `mise run lint` を実行する（[ADR 0012](docs/adr/0012-ci-github-actions.md)）。Action は SHA で固定している。
+
 ## 秘匿情報
 
 このリポは public 公開を前提にしている。パスワードやトークンは apply 時に生成し、Docker volume `lab-secrets` にだけ書く。詳細は [ADR 0006](docs/adr/0006-no-secrets-in-repo.md) と [ADR 0009](docs/adr/0009-secrets-via-ephemeral-and-volume.md)。
