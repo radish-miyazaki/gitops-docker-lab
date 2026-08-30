@@ -1,0 +1,2 @@
+# webhook_secret は tfvars に書かない。mise run bootstrap が TF_VAR_webhook_secret で渡す
+# platform_state_path = "../platform/terraform.tfstate"
