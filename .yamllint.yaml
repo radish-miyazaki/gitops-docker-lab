@@ -1,0 +1,9 @@
+# ryl (yamllint 互換の YAML linter) が自動検出する設定ファイル名。.ryl.yaml では検出されないため採用。
+extends: default
+ignore: |
+  docs/superpowers/
+rules:
+  line-length:
+    max: 200
+  document-start: disable
+  truthy: disable

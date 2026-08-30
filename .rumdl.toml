@@ -1,0 +1,12 @@
+# .rumdl.toml
+[global]
+exclude = ["docs/superpowers/**", "tofu/**/README.md"]
+# MD057: README が参照する docs/adr/*.md は後続タスクで作成されるため、
+# このリポの初期段階では存在しないリンク切れとして誤検知する。無効化する。
+disable = ["MD057"]
+
+[MD013]
+line-length = 200
+
+[MD033]
+allowed-elements = ["!-- BEGIN_TF_DOCS --", "!-- END_TF_DOCS --"]

@@ -1,0 +1,41 @@
+repos:
+  - repo: local
+    hooks:
+      - id: terraform-fmt
+        name: tofu fmt
+        entry: tofu fmt -check -recursive tofu
+        language: system
+        pass_filenames: false
+        files: \.tf$
+      - id: tflint
+        name: tflint
+        entry: tflint --recursive
+        language: system
+        pass_filenames: false
+        files: \.tf$
+      - id: ryl
+        name: ryl
+        entry: ryl
+        language: system
+        types: [yaml]
+      - id: rumdl
+        name: rumdl
+        entry: rumdl check
+        language: system
+        types: [markdown]
+      - id: shellcheck
+        name: shellcheck
+        entry: shellcheck
+        language: system
+        types: [shell]
+      - id: gitleaks
+        name: gitleaks
+        entry: gitleaks protect --staged --no-banner --redact
+        language: system
+        pass_filenames: false
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.2.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [feat, fix, docs, chore, refactor, test]

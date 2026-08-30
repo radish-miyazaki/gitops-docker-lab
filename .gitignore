@@ -1,0 +1,15 @@
+# OpenTofu の状態と作業ファイル。state には Webhook secret が残るので絶対に含めない
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfvars
+!*.tfvars.example
+crash.log
+
+# 秘匿値になりうるもの
+.env
+*.pem
+*.key
+
+# エディタ
+.DS_Store

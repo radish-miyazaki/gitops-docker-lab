@@ -1,0 +1,18 @@
+# Docker 以外のツールはすべてここで固定し、グローバル環境を汚さない
+[tools]
+opentofu = "latest"
+tflint = "latest"
+terraform-docs = "latest"
+prek = "latest"
+rumdl = "latest"
+gitleaks = "latest"
+shellcheck = "latest"
+"cargo:ryl" = "latest"
+
+[tasks.lint]
+description = "fmt / validate / tflint / YAML / Markdown / 秘匿値チェック"
+file = "scripts/lint.sh"
+
+[tasks.docs]
+description = "terraform-docs で各 README を更新する"
+file = "scripts/docs.sh"
