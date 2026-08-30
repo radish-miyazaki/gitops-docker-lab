@@ -1,0 +1,4 @@
+# コピーして terraform.tfvars にする。秘匿値はここに書かない（すべて apply 時に生成される）
+# forgejo_host_port    = 3000
+# grafana_host_port    = 3001
+# poll_interval        = "5m"
