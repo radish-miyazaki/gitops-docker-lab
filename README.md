@@ -28,7 +28,7 @@ mise run destroy     # すべて消す
 
 ## 秘匿情報
 
-このリポは public 公開を前提にしている。パスワードやトークンは apply 時に生成し、Docker volume `lab-secrets` にだけ書く。詳細は [ADR 0006](docs/adr/0006-no-secrets-in-repo.md) と [ADR 0009](docs/adr/0009-secrets-via-ephemeral-and-volume.md)。
+このリポは public 公開を前提にしている。パスワードやトークンは apply 時に生成し、Docker volume `lab-secrets` にだけ書く。詳細は ADR 0006 と ADR 0009（`docs/adr/`）。
 
 ## ドキュメント
 
