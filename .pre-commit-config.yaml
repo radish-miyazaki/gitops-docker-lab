@@ -25,8 +25,12 @@ repos:
         types: [markdown]
       - id: shellcheck
         name: shellcheck
-        entry: shellcheck
+        # 変更ファイルだけを渡すと scripts/lib.sh を source している側だけが
+        # コミットされた場合に SC1091（source 先が見つからない）が誤検出されるため、
+        # scripts/lint.sh と同じ対象をまとめて渡す
+        entry: bash -c 'shellcheck scripts/*.sh tofu/modules/*/*.sh'
         language: system
+        pass_filenames: false
         types: [shell]
       - id: gitleaks
         name: gitleaks

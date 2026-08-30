@@ -27,6 +27,27 @@ EOF
   chmod +x "${path}"
 }
 
+# @description git push をリトライ付きで実行する。
+#   組織/リポジトリ作成直後は API 認証（tofu の forgejo provider）は通っても
+#   git smart HTTP の basic 認証が数秒遅れて有効になることがあるため、
+#   一度失敗しても間を置いて再試行する。
+# @arg $1 string リモート URL
+# @arg $2 string askpass スクリプトのパス
+push_with_retry() {
+  local remote="$1"
+  local askpass="$2"
+  local attempt
+  for attempt in 1 2 3 4 5; do
+    if GIT_ASKPASS="${askpass}" GIT_TERMINAL_PROMPT=0 git push -q "${remote}" main:main; then
+      return 0
+    fi
+    err "git push に失敗しました（${attempt}/5 回目）。3 秒後に再試行します"
+    sleep 3
+  done
+  err "git push が 5 回とも失敗しました"
+  return 1
+}
+
 main() {
   local clone_url admin_user work
   clone_url="$(cd "${ROOT}/tofu/stacks/forgejo" && tofu output -raw sample_app_clone_url_host)"
@@ -45,7 +66,7 @@ main() {
   git init -q -b main
   git -c user.name=seed -c user.email=seed@localhost.invalid add .
   git -c user.name=seed -c user.email=seed@localhost.invalid commit -q -m "feat: sample-app の初版"
-  GIT_ASKPASS="${work}/askpass.sh" GIT_TERMINAL_PROMPT=0 git push -q "${clone_url}" main:main
+  push_with_retry "${clone_url}" "${work}/askpass.sh"
 
   echo "push しました: ${clone_url}"
 }

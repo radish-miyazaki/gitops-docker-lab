@@ -16,3 +16,19 @@ file = "scripts/lint.sh"
 [tasks.docs]
 description = "terraform-docs で各 README を更新する"
 file = "scripts/docs.sh"
+
+[tasks.bootstrap]
+description = "platform → forgejo を apply し、sample-app を push する"
+file = "scripts/bootstrap.sh"
+
+[tasks.destroy]
+description = "forgejo → platform の順に destroy する"
+file = "scripts/destroy.sh"
+
+[tasks.creds]
+description = "lab-secrets の内容を表示する"
+file = "scripts/creds.sh"
+
+[tasks.demo]
+description = "変更を push して反映を見る手順を表示する"
+file = "scripts/demo.sh"
