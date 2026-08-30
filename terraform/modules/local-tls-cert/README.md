@@ -4,7 +4,7 @@ mkcert でローカル CA と `*.gitops.localhost` の証明書を作り、volum
 
 初回は `mkcert -install` が OS の信頼ストアを触るため、管理者確認（macOS ならキーチェーンのパスワード）が 1 度だけ出る。`install_ca = false` にすると登録を飛ばせるが、その場合ブラウザと `curl` は証明書を信頼しない。
 
-`mkcert` と `docker` が PATH に要る。`mise run` 経由で実行すれば mise が両方を通す。
+`mkcert`（mise 管理）と `docker`（Docker Desktop / OrbStack が入れる）が PATH に要る。`mise run` 経由なら mkcert は mise が通す。
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
