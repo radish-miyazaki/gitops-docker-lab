@@ -4,6 +4,8 @@ Docker 上に Forgejo と doco-cd と Prometheus と Grafana を起こす。秘�
 
 apply 後に `../forgejo` を apply する。順序は `mise run bootstrap` が担う。
 
+秘匿値は 3 つの `ephemeral "random_password"`（hashicorp/random）で生成する。ephemeral な値は tfstate に残らないため、terraform-docs は一覧に載せない。
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
