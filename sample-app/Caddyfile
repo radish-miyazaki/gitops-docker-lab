@@ -1,0 +1,9 @@
+{
+	# TLS は Traefik が終端するので Caddy は平文で待つ
+	auto_https off
+}
+
+:80 {
+	root * /srv
+	file_server
+}

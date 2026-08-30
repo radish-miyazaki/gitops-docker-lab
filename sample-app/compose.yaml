@@ -1,8 +1,20 @@
 services:
   web:
-    image: nginx:1.27-alpine
-    ports:
-      - "8000:80"
+    image: caddy:2-alpine
     volumes:
       # doco-cd は clone 先を /data に持つので、相対パスのバインドマウントがそのまま使える
-      - ./html:/usr/share/nginx/html:ro
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./html:/srv:ro
+    networks:
+      - gitops-lab
+    labels:
+      # 公開のしかたも GitOps の対象。Traefik がこのラベルを読んで https://app.gitops.localhost を向ける
+      traefik.enable: "true"
+      traefik.http.routers.app.rule: "Host(`app.gitops.localhost`)"
+      traefik.http.routers.app.entrypoints: websecure
+      traefik.http.routers.app.tls: "true"
+      traefik.http.services.app.loadbalancer.server.port: "80"
+
+networks:
+  gitops-lab:
+    external: true

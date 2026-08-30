@@ -8,7 +8,7 @@ Docker Compose だけで GitOps を体験するための学習環境。Git に p
 - Forgejo: Git サーバー (<https://forgejo.gitops.localhost>)
 - doco-cd: GitOps ツール。Webhook とポーリングで変更を拾い `docker compose up` する (<https://doco-cd.gitops.localhost>)
 - Prometheus / Grafana: doco-cd のメトリクスを可視化 (<https://prometheus.gitops.localhost> / <https://grafana.gitops.localhost>)
-- sample-app: デプロイ対象の nginx (<https://app.gitops.localhost>)
+- sample-app: デプロイ対象の Caddy (<https://app.gitops.localhost>)
 
 すべて OpenTofu で作る。ツールは mise で入れる。
 
@@ -30,7 +30,7 @@ Docker Compose だけで GitOps を体験するための学習環境。Git に p
    │  ├─ doco-cd.gitops.localhost      Webhook 受信 / :9120 metrics（metrics は内部のみ）
    │  ├─ prometheus.gitops.localhost
    │  ├─ grafana.gitops.localhost
-   │  └─ app.gitops.localhost          doco-cd がデプロイする nginx（compose service web）
+   │  └─ app.gitops.localhost          doco-cd がデプロイする Caddy（compose service web）
    ├─ volume lab-secrets  秘匿値の唯一の保存先
    └─ volume lab-certs    mkcert が発行した証明書と鍵の唯一の保存先
 ```
