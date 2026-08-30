@@ -145,7 +145,7 @@ module "prometheus" {
   image        = docker_image.prometheus.image_id
   network_name = docker_network.lab.name
   ports = [
-    { internal = 9090, external = var.prometheus_host_port },
+    { internal = local.prometheus_internal_port, external = var.prometheus_host_port },
   ]
   volumes = [
     { volume_name = docker_volume.prometheus_data.name, container_path = "/prometheus" },
@@ -164,7 +164,7 @@ module "grafana" {
   image        = docker_image.grafana.image_id
   network_name = docker_network.lab.name
   ports = [
-    { internal = 3000, external = var.grafana_host_port },
+    { internal = local.grafana_internal_port, external = var.grafana_host_port },
   ]
   env = [
     "GF_SECURITY_ADMIN_USER=admin",
@@ -180,7 +180,7 @@ module "grafana" {
   ]
   uploads = {
     "/etc/grafana/provisioning/datasources/prometheus.yaml" = templatefile("${path.module}/templates/grafana-datasource.yaml.tftpl", {
-      prometheus_url = "http://prometheus:9090"
+      prometheus_url = "http://prometheus:${local.prometheus_internal_port}"
     })
     "/etc/grafana/provisioning/dashboards/doco-cd.yaml" = templatefile("${path.module}/templates/grafana-dashboard-provider.yaml.tftpl", {
       dashboards_path = "/etc/grafana/dashboards"

@@ -1,7 +1,9 @@
 locals {
-  forgejo_internal_port = 3000
-  doco_cd_http_port     = 8080
-  doco_cd_metrics_port  = 9120
+  forgejo_internal_port    = 3000
+  doco_cd_http_port        = 8080
+  doco_cd_metrics_port     = 9120
+  prometheus_internal_port = 9090
+  grafana_internal_port    = 3000
 
   forgejo_url_host     = "http://localhost:${var.forgejo_host_port}/"
   forgejo_url_internal = "http://forgejo:${local.forgejo_internal_port}/"
