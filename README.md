@@ -34,11 +34,11 @@ Docker Compose だけで GitOps を体験するための学習環境。Git に p
 
 ## OpenTofu の構成
 
-- `tofu/stacks/platform`: コンテナ群と volume（docker provider）
-- `tofu/stacks/forgejo`: Forgejo 内の組織とリポと Webhook（forgejo provider）
-- `tofu/modules/`: 上の 2 つが使う部品
+- `terraform/stacks/platform`: コンテナ群と volume（docker provider）
+- `terraform/stacks/forgejo`: Forgejo 内の組織とリポと Webhook（forgejo provider）
+- `terraform/modules/`: 上の 2 つが使う部品
 
-順序と依存は `tofu/stacks/README.md`。
+順序と依存は `terraform/stacks/README.md`。
 
 ## 前提
 
@@ -72,7 +72,7 @@ mise run docs   # terraform-docs で README を更新する
 
 ## 既知の制約
 
-- forgejo provider に write-only 引数がないため、Webhook secret は `tofu/stacks/forgejo/terraform.tfstate` に残る。state はコミットしない
+- forgejo provider に write-only 引数がないため、Webhook secret は `terraform/stacks/forgejo/terraform.tfstate` に残る。state はコミットしない
 - Forgejo の `webhook.ALLOWED_HOST_LIST=private` はローカル前提の緩い設定
 - Forgejo は管理者ユーザー名に `admin` を使えない（予約語として拒否する）ため、`lab-admin` を使う
 - `DOCKER_HOST` は `scripts/lib.sh` が docker context から補う。OrbStack でも Docker Desktop でも動く

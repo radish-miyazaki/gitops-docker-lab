@@ -16,7 +16,7 @@ source "${ROOT}/scripts/lib.sh"
 destroy_stack() {
   local stack="$1"
   (
-    cd "${ROOT}/tofu/stacks/${stack}"
+    cd "${ROOT}/terraform/stacks/${stack}"
     [[ -f terraform.tfstate ]] || return 0
     tofu destroy -input=false -auto-approve
   )
@@ -28,18 +28,18 @@ destroy_stack() {
 # @exitcode 0 揃っている
 # @exitcode 1 欠けている
 can_destroy_forgejo() {
-  [[ -f "${ROOT}/tofu/stacks/platform/terraform.tfstate" ]] || return 1
-  (cd "${ROOT}/tofu/stacks/platform" && tofu output -raw forgejo_admin_username) >/dev/null 2>&1 \
+  [[ -f "${ROOT}/terraform/stacks/platform/terraform.tfstate" ]] || return 1
+  (cd "${ROOT}/terraform/stacks/platform" && tofu output -raw forgejo_admin_username) >/dev/null 2>&1 \
     && read_secret forgejo_admin_password >/dev/null 2>&1
 }
 
 main() {
-  if [[ -f "${ROOT}/tofu/stacks/forgejo/terraform.tfstate" ]]; then
+  if [[ -f "${ROOT}/terraform/stacks/forgejo/terraform.tfstate" ]]; then
     if can_destroy_forgejo; then
       export_forgejo_env
       destroy_stack forgejo
     else
-      err "tofu/stacks/platform の state か lab-secrets volume が無く、forgejo 認証情報が読めません。forgejo の state が孤立しているので destroy をスキップします。tofu/stacks/forgejo で手動確認してください"
+      err "terraform/stacks/platform の state か lab-secrets volume が無く、forgejo 認証情報が読めません。forgejo の state が孤立しているので destroy をスキップします。terraform/stacks/forgejo で手動確認してください"
     fi
   fi
 

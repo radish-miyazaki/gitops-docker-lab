@@ -11,28 +11,28 @@ readonly ROOT
 
 # @description OpenTofu の fmt と validate と tflint を実行する。
 #   modules も validate の対象にするため、backend 無しで init する。
-#   tofu/ がまだ存在しない段階では何もせず成功として抜ける。
+#   terraform/ がまだ存在しない段階では何もせず成功として抜ける。
 # @exitcode 0 すべて通った
 # @exitcode 1 いずれかが失敗した
 lint_terraform() {
   local dir
-  [[ -d "${ROOT}/tofu" ]] || return 0
-  tofu fmt -check -recursive "${ROOT}/tofu"
-  for dir in "${ROOT}"/tofu/stacks/* "${ROOT}"/tofu/modules/*; do
+  [[ -d "${ROOT}/terraform" ]] || return 0
+  tofu fmt -check -recursive "${ROOT}/terraform"
+  for dir in "${ROOT}"/terraform/stacks/* "${ROOT}"/terraform/modules/*; do
     [[ -d "${dir}" ]] || continue
     (cd "${dir}" \
       && tofu init -backend=false -input=false >/dev/null \
       && tofu validate)
   done
   # --recursive と --chdir は併用できないので cd する
-  (cd "${ROOT}/tofu" && tflint --recursive --config "${ROOT}/.tflint.hcl")
+  (cd "${ROOT}/terraform" && tflint --recursive --config "${ROOT}/.tflint.hcl")
 }
 
 # @description YAML と Markdown とシェルスクリプトを lint する。
 lint_text() {
   ryl "${ROOT}"
   rumdl check "${ROOT}"
-  shellcheck "${ROOT}"/scripts/*.sh "${ROOT}"/tofu/modules/*/*.sh
+  shellcheck "${ROOT}"/scripts/*.sh "${ROOT}"/terraform/modules/*/*.sh
 }
 
 # @description 秘匿値がコミット対象に混ざっていないか検査する。

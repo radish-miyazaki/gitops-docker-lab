@@ -9,7 +9,7 @@ Prometheus や Grafana や doco-cd の設定ファイルには、ホスト名や
 
 ## 決定
 
-設定ファイルは `tofu/stacks/platform/templates/*.tftpl` に置き、`templatefile()` で描画して `docker_container` の `upload` ブロックでコンテナに入れる。
+設定ファイルは `terraform/stacks/platform/templates/*.tftpl` に置き、`templatefile()` で描画して `docker_container` の `upload` ブロックでコンテナに入れる。
 変数を含まない大きな JSON（Grafana ダッシュボード）は `.tftpl` にせず `file()` で読む。
 
 ## 検討した選択肢

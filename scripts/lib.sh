@@ -15,15 +15,15 @@ err() {
   echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
 }
 
-# @description OrbStack など docker context 依存の環境でも OpenTofu の docker provider が
-#   ソケットを見つけられるよう、DOCKER_HOST を現在の docker context から補う。
-#   すでに設定されていれば何もしない。
-# @set DOCKER_HOST string 現在の docker context が指す Docker デーモンのエンドポイント
+# @description 標準ソケットが無い環境（OrbStack など）でだけ docker context から DOCKER_HOST を導く。
+#   Docker Desktop は /var/run/docker.sock を持つので何もしない。
+# @set DOCKER_HOST string Docker デーモンの接続先
 export_docker_host() {
-  if [[ -z "${DOCKER_HOST:-}" ]]; then
-    DOCKER_HOST="$(docker context inspect --format '{{(index .Endpoints "docker").Host}}')"
-    export DOCKER_HOST
+  if [[ -n "${DOCKER_HOST:-}" || -S /var/run/docker.sock ]]; then
+    return 0
   fi
+  DOCKER_HOST="$(docker context inspect --format '{{(index .Endpoints "docker").Host}}')"
+  export DOCKER_HOST
 }
 
 # bootstrap.sh / destroy.sh など、このファイルを source する側は
@@ -43,7 +43,7 @@ read_secret() {
 # @set FORGEJO_PASSWORD string Forgejo 管理者パスワード
 # @set TF_VAR_webhook_secret string Webhook secret
 export_forgejo_env() {
-  FORGEJO_USERNAME="$(cd "${ROOT}/tofu/stacks/platform" \
+  FORGEJO_USERNAME="$(cd "${ROOT}/terraform/stacks/platform" \
     && tofu output -raw forgejo_admin_username)"
   FORGEJO_PASSWORD="$(read_secret forgejo_admin_password)"
   TF_VAR_webhook_secret="$(read_secret webhook_secret)"

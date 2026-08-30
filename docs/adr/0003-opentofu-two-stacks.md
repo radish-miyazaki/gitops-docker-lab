@@ -9,7 +9,7 @@ forgejo provider は Forgejo が起動して管理者が存在しないと使え
 
 ## 決定
 
-`tofu/stacks/platform`（docker provider）と `tofu/stacks/forgejo`（forgejo provider）に分け、platform → forgejo の順に apply する。受け渡しは `terraform_remote_state` だけ。ディレクトリ名は役割で付け、番号は付けない。
+`terraform/stacks/platform`（docker provider）と `terraform/stacks/forgejo`（forgejo provider）に分け、platform → forgejo の順に apply する。受け渡しは `terraform_remote_state` だけ。ディレクトリ名は役割で付け、番号は付けない。
 
 ## 検討した選択肢
 

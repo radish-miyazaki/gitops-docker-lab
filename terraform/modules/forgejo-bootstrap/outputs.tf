@@ -1,6 +1,6 @@
 output "id" {
   description = "bootstrap 完了を待つための依存用 ID"
-  value       = terraform_data.bootstrap.id
+  value       = terraform_data.this.id
 }
 
 output "admin_username" {

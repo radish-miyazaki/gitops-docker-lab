@@ -11,7 +11,7 @@ readonly ROOT
 
 main() {
   local dir
-  for dir in "${ROOT}"/tofu/stacks/* "${ROOT}"/tofu/modules/*; do
+  for dir in "${ROOT}"/terraform/stacks/* "${ROOT}"/terraform/modules/*; do
     [[ -d "${dir}" ]] || continue
     # cwd に依存せず設定ファイルを解決させるため明示的にパスを渡す
     terraform-docs --config "${ROOT}/.terraform-docs.yml" "${dir}"

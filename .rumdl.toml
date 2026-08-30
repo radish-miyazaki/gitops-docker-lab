@@ -1,5 +1,5 @@
 [global]
-exclude = ["docs/superpowers/**", "tofu/**/README.md"]
+exclude = ["docs/superpowers/**", "terraform/**/README.md"]
 
 [MD013]
 line-length = 200

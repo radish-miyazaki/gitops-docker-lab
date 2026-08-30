@@ -11,7 +11,7 @@ readonly ROOT
 
 main() {
   local admin_user
-  admin_user="$(cd "${ROOT}/tofu/stacks/platform" && tofu output -raw forgejo_admin_username)"
+  admin_user="$(cd "${ROOT}/terraform/stacks/platform" && tofu output -raw forgejo_admin_username)"
 
   cat <<USAGE
 1. clone する（ユーザー名は ${admin_user}、パスワードは mise run creds の forgejo_admin_password）

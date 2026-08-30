@@ -64,8 +64,8 @@ push_with_retry() {
 
 main() {
   local clone_url admin_user work
-  clone_url="$(cd "${ROOT}/tofu/stacks/forgejo" && tofu output -raw sample_app_clone_url_host)"
-  admin_user="$(cd "${ROOT}/tofu/stacks/platform" && tofu output -raw forgejo_admin_username)"
+  clone_url="$(cd "${ROOT}/terraform/stacks/forgejo" && tofu output -raw sample_app_clone_url_host)"
+  admin_user="$(cd "${ROOT}/terraform/stacks/platform" && tofu output -raw forgejo_admin_username)"
 
   work="$(mktemp -d)"
   # main() を抜けると local work は失効するため、trap には値を今展開して渡す

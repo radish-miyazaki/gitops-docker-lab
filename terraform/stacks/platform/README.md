@@ -50,7 +50,7 @@ apply 後に `../forgejo` を apply する。順序は `mise run bootstrap` が�
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| docker\_host | Docker デーモンの接続先。null なら DOCKER\_HOST 環境変数を使う | `string` | `null` | no |
+| docker\_host | Docker デーモンの接続先。Docker Desktop の標準ソケットを既定にし、OrbStack などは DOCKER\_HOST で上書きする | `string` | `"unix:///var/run/docker.sock"` | no |
 | doco\_cd\_host\_port | ホスト側で doco-cd の Webhook を公開するポート | `number` | `8080` | no |
 | doco\_cd\_image | doco-cd のイメージ | `string` | `"ghcr.io/kimdre/doco-cd:0.113.0"` | no |
 | forgejo\_admin\_username | Forgejo 管理者のユーザー名。Forgejo は admin を予約語として拒否するため既定値は別名にしてある | `string` | `"lab-admin"` | no |

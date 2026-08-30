@@ -1,7 +1,7 @@
 variable "docker_host" {
-  description = "Docker デーモンの接続先。null なら DOCKER_HOST 環境変数を使う"
+  description = "Docker デーモンの接続先。Docker Desktop の標準ソケットを既定にし、OrbStack などは DOCKER_HOST で上書きする"
   type        = string
-  default     = null
+  default     = "unix:///var/run/docker.sock"
 }
 
 variable "network_name" {

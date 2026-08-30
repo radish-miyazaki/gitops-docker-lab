@@ -2,7 +2,7 @@
 
 Forgejo の管理者と doco-cd 用ユーザーを作り、秘匿値を Docker volume に書く。秘匿値は ephemeral 変数で受け取り、tfstate には残さない（ADR 0009）。
 
-作り直すときは `tofu apply -replace=module.forgejo_bootstrap.terraform_data.bootstrap` ではなく、Forgejo の volume も消える `mise run destroy` から入る。ユーザーが既に存在すると `user create` が失敗するため。
+作り直すときは `tofu apply -replace=module.forgejo_bootstrap.terraform_data.this` ではなく、Forgejo の volume も消える `mise run destroy` から入る。ユーザーが既に存在すると `user create` が失敗するため。
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -21,7 +21,7 @@ Forgejo の管理者と doco-cd 用ユーザーを作り、秘匿値を Docker v
 
 | Name | Type |
 | ---- | ---- |
-| [terraform_data.bootstrap](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
+| [terraform_data.this](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
 
 ## Inputs
 

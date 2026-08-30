@@ -11,7 +11,7 @@
 
 OpenTofu（1.11 以上）を使う。
 1.11 で ephemeral resource、write-only 引数、`ephemeral = true` の変数と出力が入っており、0009 の設計をそのまま実装できる。
-provider は OpenTofu のレジストリから同じ名前で取れる。ディレクトリ名は `tofu/`、CLI は `tofu`。
+provider は OpenTofu のレジストリから同じ名前で取れる。ディレクトリ名は `terraform/`、CLI は `tofu`。
 
 ## 検討した選択肢
 

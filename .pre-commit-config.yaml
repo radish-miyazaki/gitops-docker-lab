@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: terraform-fmt
         name: tofu fmt
-        entry: tofu fmt -check -recursive tofu
+        entry: tofu fmt -check -recursive terraform
         language: system
         pass_filenames: false
         files: \.tf$
@@ -28,7 +28,7 @@ repos:
         # 変更ファイルだけを渡すと scripts/lib.sh を source している側だけが
         # コミットされた場合に SC1091（source 先が見つからない）が誤検出されるため、
         # scripts/lint.sh と同じ対象をまとめて渡す
-        entry: bash -c 'shopt -s nullglob; shellcheck scripts/*.sh tofu/modules/*/*.sh'
+        entry: bash -c 'shopt -s nullglob; shellcheck scripts/*.sh terraform/modules/*/*.sh'
         language: system
         pass_filenames: false
         types: [shell]

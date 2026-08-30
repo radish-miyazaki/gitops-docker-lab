@@ -15,7 +15,7 @@ source "${ROOT}/scripts/lib.sh"
 apply_stack() {
   local stack="$1"
   (
-    cd "${ROOT}/tofu/stacks/${stack}"
+    cd "${ROOT}/terraform/stacks/${stack}"
     tofu init -input=false
     tofu apply -input=false -auto-approve
   )
@@ -29,7 +29,7 @@ main() {
   apply_stack forgejo
   "${ROOT}/scripts/seed-sample-app.sh"
 
-  admin_user="$(cd "${ROOT}/tofu/stacks/platform" && tofu output -raw forgejo_admin_username)"
+  admin_user="$(cd "${ROOT}/terraform/stacks/platform" && tofu output -raw forgejo_admin_username)"
 
   echo
   echo "Forgejo:  http://localhost:3000  (${admin_user} / mise run creds)"
