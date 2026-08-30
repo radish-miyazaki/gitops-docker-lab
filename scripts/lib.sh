@@ -6,7 +6,8 @@
 # 2 回 source されても readonly の再代入で落ちないようにする
 : "${SECRETS_VOLUME:=lab-secrets}"
 readonly SECRETS_VOLUME
-readonly SECRETS_READER_IMAGE="alpine:3.21"
+: "${SECRETS_READER_IMAGE:=alpine:3.21}"
+readonly SECRETS_READER_IMAGE
 
 # @description メッセージを stderr に出す。
 # @arg $@ string メッセージ
