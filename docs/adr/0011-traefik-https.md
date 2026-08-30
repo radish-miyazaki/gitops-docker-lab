@@ -38,7 +38,12 @@ macOS でも `*.gitops.localhost` が 127.0.0.1 と ::1 の両方に解決され
 - Forgejo の `ROOT_URL` が `https://forgejo.gitops.localhost/` になる。Webhook が届ける clone URL もこの形になるため、
   doco-cd の `SOURCE_URL_REWRITES_FILE` がコンテナ間の `http://forgejo:3000/` へ書き換える（ADR 0007 のテンプレートに値として渡している）
 - TLS の終端は Traefik が行い、Forgejo 自身は `PROTOCOL=http` のまま動く
-- Traefik のダッシュボードは `api.dashboard: true` で有効だが、ルーターを定義していないのでホストからは開けない。コンテナの中からだけ到達できる。必要になったら router を 1 つ足す
+- Traefik のダッシュボードは `api.dashboard: true` で有効だが、ルーターを定義していないので、ホストからもコンテナ内からも到達できない
+  （`api.insecure` は false で、API を返す entrypoint が無い）。必要になったら `api@internal` を指す router を 1 つ足す
+- Traefik はラベルを読むために `docker.sock` をマウントしている。これは Docker API へのフルアクセスを許すのと同じで、
+  `read_only = true` は API 呼び出し自体を制限しない。ローカルの学習用途として許容しているが、気にするなら `docker-socket-proxy` を挟む選択肢がある
+- `domain` 変数だけを変えると証明書は再発行されるが、Traefik コンテナは作り直されない
+  （file provider はマウントした証明書ファイルの変更を監視しない）。ドメインを変えたときは `mise run destroy && mise run bootstrap` を実行する
 - ポートを指定する `*_host_port` 変数は無くなった。ドメインを変えたいときは `domain` 変数を使う
 
 ## 参考

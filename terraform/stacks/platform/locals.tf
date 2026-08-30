@@ -26,6 +26,8 @@ locals {
 }
 
 # ルーティングのラベルはサービスごとに同じ形になるので、まとめて組み立てる
+# app は hosts / urls には含めるが、そのルーターは sample-app/compose.yaml 側で定義している。
+# そのため traefik_labels.app はどこからも参照されないが、意図した状態
 locals {
   traefik_labels = { for k, h in local.hosts : k => {
     "traefik.enable"                        = "true"

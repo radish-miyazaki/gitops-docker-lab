@@ -5,6 +5,7 @@ hooks = [
   { id = "tflint", name = "tflint", language = "system", entry = "bash -c 'ROOT=\"$(pwd)\"; cd terraform && tflint --recursive --config \"$ROOT/.tflint.hcl\"'", pass_filenames = false, files = "\\.tf$" },
   { id = "ryl", name = "ryl", language = "system", entry = "ryl", types = ["yaml"] },
   { id = "rumdl", name = "rumdl", language = "system", entry = "rumdl check", types = ["markdown"] },
+  # 変更ファイルだけ渡すと lib.sh を source する側で SC1091 が誤検出されるので全体を検査する
   { id = "shellcheck", name = "shellcheck", language = "system", entry = "bash -c 'shopt -s nullglob; shellcheck scripts/*.sh terraform/modules/*/*.sh'", pass_filenames = false, types = ["shell"] },
   { id = "gitleaks", name = "gitleaks", language = "system", entry = "gitleaks protect --staged --no-banner --redact", pass_filenames = false },
 ]
