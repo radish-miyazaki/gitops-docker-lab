@@ -53,13 +53,18 @@ forgejo_cli() {
 }
 
 # @description 管理者と doco-cd 用ユーザーを作る。
+#   admin のパスワードはホスト側の docker exec の argv に出すと ps に見えてしまうため、
+#   環境変数のままコンテナへ転送し、コンテナ内の sh -c で展開する。
 create_users() {
-  forgejo_cli admin user create \
-    --admin \
-    --username "${ADMIN_USERNAME}" \
-    --email "${ADMIN_EMAIL}" \
-    --password "${ADMIN_PASSWORD}" \
-    --must-change-password=false
+  # shellcheck disable=SC2016  # $1 $2 ADMIN_PASSWORD はコンテナ内の sh で展開させる
+  docker exec -u git -e ADMIN_PASSWORD "${CONTAINER}" sh -c '
+    forgejo admin user create \
+      --admin \
+      --username "$1" \
+      --email "$2" \
+      --password "${ADMIN_PASSWORD}" \
+      --must-change-password=false
+  ' _ "${ADMIN_USERNAME}" "${ADMIN_EMAIL}"
 
   # doco-cd はトークンだけを使うので、パスワードは生成して捨てる
   forgejo_cli admin user create \
@@ -80,15 +85,17 @@ generate_git_token() {
 }
 
 # @description 秘匿値を 1 つ volume に書く。
-#   Grafana は uid 472 で読むので 0644 にする。volume 自体は docker 経由でしか触れない。
+#   値を docker run の argv (-e VALUE=...) に出すと ps に見えてしまうため、標準入力で渡す。
+#   umask 022 で書くので 0644 になり、uid 472 で読む Grafana からも読める。
+#   volume 自体は docker 経由でしか触れない。
 # @arg $1 string ファイル名
 # @arg $2 string 値
 write_secret() {
   local name="$1"
   local value="$2"
-  docker run --rm -v "${SECRETS_VOLUME}:/s" -e NAME="${name}" -e VALUE="${value}" \
+  printf '%s' "${value}" | docker run --rm -i -v "${SECRETS_VOLUME}:/s" -e NAME="${name}" \
     "${WRITER_IMAGE}" \
-    sh -c 'umask 022; printf %s "${VALUE}" > "/s/${NAME}" && chmod 0644 "/s/${NAME}"'
+    sh -c 'umask 022; cat > "/s/${NAME}"'
 }
 
 main() {
