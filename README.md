@@ -69,6 +69,8 @@ mise run lint   # fmt / validate / tflint / ryl / rumdl / gitleaks / shellcheck
 mise run docs   # terraform-docs で README を更新する
 ```
 
+各 hook の定義は `prek.toml`、YAML の検査ルールは `.ryl.toml` にある。
+
 コミットは Conventional Commits。prek が commit-msg で検査する。
 
 push と PR のたびに GitHub Actions が `mise run lint` を実行する（[ADR 0012](docs/adr/0012-ci-github-actions.md)）。Action は SHA で固定している。
@@ -85,6 +87,7 @@ push と PR のたびに GitHub Actions が `mise run lint` を実行する（[A
 - `DOCKER_HOST` は `scripts/lib.sh` が docker context から補う。OrbStack でも Docker Desktop でも動く
 - ホストの 80 / 443 を Traefik が使う。他のサーバーが掴んでいると `mise run bootstrap` が失敗する
 - 証明書は mkcert のローカル CA で署名しているので、この Mac 以外からは信頼されない
+- mkcert のローカル CA を OS の信頼ストアから外したいときは `mkcert -uninstall` を使う
 
 ## ドキュメント
 
