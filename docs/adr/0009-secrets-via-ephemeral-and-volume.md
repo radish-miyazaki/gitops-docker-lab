@@ -15,6 +15,8 @@ OpenTofu 1.11 では ephemeral resource と write-only 引数と ephemeral 変�
 | kreuzwerker/docker 4.5 | なし | なし |
 | svalabs/forgejo 1.6 | なし | なし |
 
+この対応状況は provider 側の実装によるもので、OpenTofu と Terraform のどちらで使っても変わらない（→ 0010）。
+
 `docker_container.env` に渡す方法では tfstate に平文で残る。
 
 ## 決定

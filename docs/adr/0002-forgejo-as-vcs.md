@@ -16,7 +16,7 @@ Forgejo をコンテナ 1 つ、SQLite で動かす。リポと Webhook は sval
 | 選択肢 | 良い点 | 悪い点 |
 |---|---|---|
 | Forgejo | 単一コンテナ。Webhook と API あり。OpenTofu provider あり | 初期化に管理者作成の一手間が要る |
-| Gitea | Forgejo とほぼ同じ | Forgejo の provider のほうが手入れされている |
+| Gitea | Forgejo とほぼ同じ | svalabs/forgejo は Forgejo 専用で、Gitea 用 provider を流用するより素直 |
 | GitLab CE | 機能豊富 | 重い。学習環境には過剰 |
 | bare リポ + post-receive hook | 最小構成 | Webhook 相当を自作することになる |
 

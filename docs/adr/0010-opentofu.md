@@ -5,23 +5,22 @@
 
 ## 背景
 
-当初は Terraform 1.14 を想定していた。ephemeral resource と write-only 引数（0009）を使う前提なので、乗り換えるならこの 2 つが使える必要がある。
+ephemeral resource（Terraform 1.10）と write-only 引数（1.11）は Terraform でも使え、OpenTofu 固有の機能ではない。この機能差は選定理由にならない。
 
 ## 決定
 
-OpenTofu（1.11 以上）を使う。
-1.11 で ephemeral resource、write-only 引数、`ephemeral = true` の変数と出力が入っており、0009 の設計をそのまま実装できる。
-provider は OpenTofu のレジストリから同じ名前で取れる。ディレクトリ名は `terraform/`、CLI は `tofu`。
+OpenTofu（1.11 以上）を使う。MPL 2.0 で配布されており、Terraform との差分を実際に試したいという学習上の動機がある。加えて、0009 の設計に必要な ephemeral resource と `ephemeral` 変数・出力が 1.11 でそろっていることをスキーマで確認できた。
 
 ## 検討した選択肢
 
 | 選択肢 | 良い点 | 悪い点 |
 |---|---|---|
-| OpenTofu | オープンソース（MPL）。必要な機能は 1.11 でそろっている | Terraform 向けの記事をそのまま読むと CLI 名が違う |
-| Terraform 1.14 | 情報が多い | BSL ライセンス。学習用途なら問題ないが、試す動機が薄い |
+| OpenTofu | オープンソース（MPL）。学習の動機がある | Terraform 向けの情報を読み替える手間。provider の機能追従がわずかに遅れることがある（write-only 対応の provider が少ない点は両者共通） |
+| Terraform 1.14 | 情報が多い | BSL 1.1。試す動機が弱い |
 
 ## 影響
 
+ディレクトリ名は `terraform/`、CLI は `tofu`。provider は OpenTofu のレジストリから同じ名前で取れる。
 `terraform_remote_state` や `terraform_data` の名前は OpenTofu でも同じ。tflint と terraform-docs は `.tf` を読むだけなのでそのまま使える。tfstate に `terraform_version` として OpenTofu のバージョンが入る。
 
 ## 参考
