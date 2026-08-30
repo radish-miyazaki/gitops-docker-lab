@@ -6,7 +6,7 @@
 ## 背景
 
 OpenTofu 1.11 では ephemeral resource と write-only 引数と ephemeral 変数が使える。
-ただし ephemeral な値を渡せる先は provider 設定と provisioner と ephemeral 変数・出力だけで、通常のリソース属性に渡すとエラーになる。
+ただし ephemeral な値を渡せる先は provider 設定と provisioner と ephemeral 変数と出力だけで、通常のリソース属性に渡すとエラーになる。
 使う provider の対応状況は次のとおり（2026-08-30 にスキーマで確認）。
 
 | provider | ephemeral resource | write-only 引数 |

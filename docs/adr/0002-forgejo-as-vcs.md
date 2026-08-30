@@ -24,6 +24,8 @@ Forgejo をコンテナ 1 つ、SQLite で動かす。リポと Webhook は sval
 
 管理者の作成は `forgejo admin user create` を OpenTofu の provisioner から呼ぶ（→ 0003、0009）。
 
+Webhook の送信先はプライベートアドレス（doco-cd コンテナ）なので、`FORGEJO__webhook__ALLOWED_HOST_LIST` は当初案の `*`（全許可）ではなく、より狭い `private` を採用した。
+
 ## 参考
 
 - <https://forgejo.org/docs/latest/admin/installation-docker/>
