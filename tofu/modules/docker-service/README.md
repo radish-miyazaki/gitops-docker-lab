@@ -14,7 +14,7 @@
 
 | Name | Version |
 | ---- | ------- |
-| docker | ~> 4.5 |
+| docker | 4.5.0 |
 
 ## Resources
 

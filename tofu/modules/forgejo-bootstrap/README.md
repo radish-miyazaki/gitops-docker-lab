@@ -33,7 +33,7 @@ Forgejo の管理者と doco-cd 用ユーザーを作り、秘匿値を Docker v
 | secrets\_volume\_name | 秘匿値を書く Docker volume 名 | `string` | n/a | yes |
 | webhook\_secret | Webhook の secret。ephemeral な値を渡す | `string` | n/a | yes |
 | admin\_email | Forgejo 管理者のメールアドレス。ローカル用のダミーでよい | `string` | `"admin@localhost.invalid"` | no |
-| admin\_username | Forgejo 管理者のユーザー名 | `string` | `"admin"` | no |
+| admin\_username | Forgejo 管理者のユーザー名。Forgejo は admin を予約語として拒否するため既定値は別名にしてある | `string` | `"lab-admin"` | no |
 | service\_email | doco-cd ユーザーのメールアドレス | `string` | `"doco-cd@localhost.invalid"` | no |
 | service\_username | doco-cd が Git 認証に使うユーザー名 | `string` | `"doco-cd"` | no |
 | token\_scopes | doco-cd ユーザーのトークンに付けるスコープ | `string` | `"read:repository"` | no |

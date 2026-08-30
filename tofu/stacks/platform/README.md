@@ -51,6 +51,7 @@ apply 後に `../forgejo` を apply する。順序は `mise run bootstrap` が�
 | docker\_host | Docker デーモンの接続先。null なら DOCKER\_HOST 環境変数を使う | `string` | `null` | no |
 | doco\_cd\_host\_port | ホスト側で doco-cd の Webhook を公開するポート | `number` | `8080` | no |
 | doco\_cd\_image | doco-cd のイメージ | `string` | `"ghcr.io/kimdre/doco-cd:0.113.0"` | no |
+| forgejo\_admin\_username | Forgejo 管理者のユーザー名。Forgejo は admin を予約語として拒否するため既定値は別名にしてある | `string` | `"lab-admin"` | no |
 | forgejo\_host\_port | ホスト側で Forgejo を公開するポート | `number` | `3000` | no |
 | forgejo\_image | Forgejo のイメージ | `string` | `"codeberg.org/forgejo/forgejo:16"` | no |
 | grafana\_host\_port | ホスト側で Grafana を公開するポート | `number` | `3001` | no |

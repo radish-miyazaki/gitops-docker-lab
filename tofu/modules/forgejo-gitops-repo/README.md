@@ -14,7 +14,7 @@ GitOps の対象リポを 1 つ作る。リポと push Webhook と読み取り�
 
 | Name | Version |
 | ---- | ------- |
-| forgejo | ~> 1.6 |
+| forgejo | 1.6.0 |
 
 ## Resources
 

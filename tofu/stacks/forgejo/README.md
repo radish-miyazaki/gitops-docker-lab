@@ -23,7 +23,7 @@ tofu apply
 
 | Name | Version |
 | ---- | ------- |
-| forgejo | ~> 1.6 |
+| forgejo | 1.6.0 |
 | terraform | n/a |
 
 ## Modules
