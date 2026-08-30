@@ -22,13 +22,20 @@ apply_stack() {
 }
 
 # @description tofu output -json urls の結果から 1 件取り出す。jq を増やしたくないので sed で拾う。
+#   キーが見つからないと空文字を返して気付きにくいので、その場合はエラーにする。
 # @arg $1 string urls の JSON
 # @arg $2 string キー（forgejo など）
 # @stdout URL
 url_from() {
   local json="$1"
   local key="$2"
-  sed -n "s/.*\"${key}\": *\"\([^\"]*\)\".*/\\1/p" <<< "${json}"
+  local url
+  url="$(sed -n "s/.*\"${key}\": *\"\([^\"]*\)\".*/\\1/p" <<< "${json}")"
+  if [[ -z "${url}" ]]; then
+    err "urls に ${key} が無い"
+    return 1
+  fi
+  echo "${url}"
 }
 
 main() {

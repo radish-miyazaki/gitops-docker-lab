@@ -4,6 +4,8 @@ mkcert でローカル CA と `*.gitops.localhost` の証明書を作り、volum
 
 初回は `mkcert -install` が OS の信頼ストアを触るため、管理者確認（macOS ならキーチェーンのパスワード）が 1 度だけ出る。`install_ca = false` にすると登録を飛ばせるが、その場合ブラウザと `curl` は証明書を信頼しない。
 
+`mkcert` と `docker` が PATH に要る。`mise run` 経由で実行すれば mise が両方を通す。
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -37,6 +39,5 @@ mkcert でローカル CA と `*.gitops.localhost` の証明書を作り、volum
 | Name | Description |
 | ---- | ----------- |
 | cert\_file | volume 内の証明書ファイル名 |
-| id | 証明書の発行完了を待つための依存用 ID |
 | key\_file | volume 内の秘密鍵ファイル名 |
 <!-- END_TF_DOCS -->
