@@ -22,13 +22,17 @@ apply_stack() {
 }
 
 main() {
+  local admin_user
+
   apply_stack platform
   export_forgejo_env
   apply_stack forgejo
   "${ROOT}/scripts/seed-sample-app.sh"
 
+  admin_user="$(cd "${ROOT}/tofu/stacks/platform" && tofu output -raw forgejo_admin_username)"
+
   echo
-  echo "Forgejo:  http://localhost:3000  (admin / mise run creds)"
+  echo "Forgejo:  http://localhost:3000  (${admin_user} / mise run creds)"
   echo "Grafana:  http://localhost:3001"
   echo "sample:   http://localhost:8000"
 }
